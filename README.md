@@ -5,6 +5,7 @@ The Model for the Analysis of Energy Demand (MAED) evaluates future energy deman
 Documentation
 =============
 Detailed documentation of MAED can be found here: https://www.iaea.org/publications/7430/model-for-analysis-of-energy-demand-maed-2
+
 Examples can be found here: https://www.iaea.org/topics/energy-planning/case-studies
 
 Contributing
