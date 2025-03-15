@@ -3,7 +3,7 @@
     session_start();
     // Set default MAED type if cookie is not set
     if (!isset($_COOKIE['maedtype'])) {
-        $maedtype = 'maedel'; // Default to maedel type
+        $maedtype = 'maedd'; // Default to maedd type since we're accessing maedd_geninf.php
     } else {
         $maedtype = $_COOKIE['maedtype'];
     }

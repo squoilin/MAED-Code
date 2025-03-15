@@ -1,6 +1,11 @@
 <?php
 require_once CLASS_PATH . "Data.class.php";
-$caseStudyId = $_COOKIE['titlecs'];
+// Set default case study ID if cookie is not set
+if (!isset($_COOKIE['titlecs'])) {
+    $caseStudyId = 'Demo MAEDD'; // Default case study
+} else {
+    $caseStudyId = $_COOKIE['titlecs'];
+}
 $cg = 'geninf_data';
 $dc = new Data($caseStudyId, $cg);
 $aaData = $dc->getRow();
