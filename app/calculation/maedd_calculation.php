@@ -1804,7 +1804,7 @@
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='EL' or $houtypes['id']=='FF' )){
-										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 / ensure_numeric($beData[$SN]);
 									}
 								}	
 							}
@@ -1813,9 +1813,9 @@
 								foreach($houtype as $houtypes){  
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y'  and $houtypes['id']=='EL'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]);
 										if($bjData['LH_'.$TypeChunk[$j]]!='Y'){
-											$fhou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_FF_'.$AllYear[$y]] = $hou_data[$TypeChunk[$j].'_FF_'.$AllYear[$y]];
+											$fhou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_FF_'.$AllYear[$y]] = ensure_numeric($hou_data[$TypeChunk[$j].'_FF_'.$AllYear[$y]]);
 										//$fhou_data[$TypeChunk[$j].'_LH_'.$houtypes['id'].'_'.$AllYear[$y]] = $hou_data[$TypeChunk[$j].'_LH_'.$AllYear[$y]] ;
 										
 										}
@@ -1827,9 +1827,9 @@
 								foreach($houtype as $houtypes){  
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='EL'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_LH_'.$AllYear[$y]] ;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_LH_'.$AllYear[$y]]);
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='FF'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_FF_'.$AllYear[$y]] ;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_FF_'.$AllYear[$y]]);
 									}
 								}	
 							}
