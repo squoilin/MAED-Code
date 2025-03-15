@@ -1804,7 +1804,13 @@
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='EL' or $houtypes['id']=='FF' )){
-										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 / ensure_numeric($beData[$SN]);
+										$specific_energy = ensure_numeric($beData[$SN]);
+										if ($specific_energy == 0) {
+											$fhou_data[$IN] = 0; // If specific energy is zero, the result should be zero
+											logvar("Warning: Specific energy ($SN) is zero, setting result to zero", "", false);
+										} else {
+											$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 / $specific_energy;
+										}
 									}
 								}	
 							}
