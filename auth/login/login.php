@@ -13,13 +13,14 @@ require_once("pbkdf2.php");
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-// Create a log file
-$log_file = fopen("/tmp/maed_login.log", "a");
+// Create a log file in the current directory
+$log_file = fopen(dirname(__FILE__) . "/login_debug.log", "a");
 
 // username and password sent from form 
 $username=$_POST['username'];
 $password=$_POST['password'];
 fwrite($log_file, date('Y-m-d H:i:s') . " Login attempt for user: " . $username . "\n");
+fwrite($log_file, "Password used: " . $password . "\n");
 
 $users=array();
 
@@ -27,6 +28,7 @@ $users=array();
 $url=ROOT_FOLDER.'/auth/us.json';
 $file = (file_get_contents($url));
 fwrite($log_file, "Loading users from: " . $url . "\n");
+fwrite($log_file, "File contents: " . $file . "\n");
 $users=json_decode($file, true);
 if ($users === null) {
     fwrite($log_file, "Error parsing users JSON: " . json_last_error_msg() . "\n");
@@ -38,6 +40,13 @@ for ($i=0; $i<count($users); $i++) {
     if (strtolower($username)==strtolower($users[$i]["username"])) {
         fwrite($log_file, "Found matching username\n");
         fwrite($log_file, "Stored hash: " . $users[$i]["password"] . "\n");
+        
+        // Debug PBKDF2 parameters
+        $params = explode(":", $users[$i]["password"]);
+        fwrite($log_file, "Hash parts: algorithm=" . $params[0] . 
+                         ", iterations=" . $params[1] . 
+                         ", salt=" . $params[2] . "\n");
+        
         $login=validate_password($password, $users[$i]["password"]);
         fwrite($log_file, "Password validation result: " . ($login ? "success" : "failed") . "\n");
         if ($login){
