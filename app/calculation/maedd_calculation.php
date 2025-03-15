@@ -1593,8 +1593,8 @@
 							
 								for($y = 0; $y < count($AllYear); $y++){
 									//=Demography!D10*Urban!D4/100*Urban!D103*Urban!D101/100*F3/1000
-									$hou_data[$SubChunk[$k].'_'.$houendtypes['id'].'_'.$AllYear[$y]] = ($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']*$popmultiple)*
-									$beData[$SubChunk[$k].'_g_'.$AllYear[$y]]/100 * $beData[$SubChunk[$k].'_d_'.$AllYear[$y]]*  $beData[$TypeChunk[$j].'_e_'.$AllYear[$y]]/100*$unittype/1000;	
+									$hou_data[$SubChunk[$k].'_'.$houendtypes['id'].'_'.$AllYear[$y]] = ensure_numeric($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']) * ensure_numeric($popmultiple) *
+									ensure_numeric($beData[$SubChunk[$k].'_g_'.$AllYear[$y]])/100 * ensure_numeric($beData[$SubChunk[$k].'_d_'.$AllYear[$y]]) * ensure_numeric($beData[$TypeChunk[$j].'_e_'.$AllYear[$y]])/100 * ensure_numeric($unittype)/1000;	
 									//=Demography!D10*Urban!D4/100*Urban!D101/100*Urban!D115*F3/1000
 									if($bjData['LH_'.$TypeChunk[$j]]=='Y'){
 										$hou_data[$SubChunk[$k].'_LH_'.$AllYear[$y]] = ensure_numeric($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']) * ensure_numeric($popmultiple) *
@@ -1606,11 +1606,8 @@
 									}else{
 									//=Demography!D10*Urban!D4/100*(1-Urban!D101/100)*Urban!D118*F3/1000	
 																				
-										$hou_data[$SubChunk[$k].'_FF_'.$AllYear[$y]] = (($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH'] * $popmultiple)*
-										$beData[$SubChunk[$k].'_g_'.$AllYear[$y]]/100) *$beData[$SubChunk[$k].'_f_'.$AllYear[$y]]* (1-$beData[$TypeChunk[$j].'_e_'.$AllYear[$y]]/100) * $unittype/1000;
-										//echo $SubChunk[$k].'_FF_'.$AllYear[$y].'='.$hou_data[$SubChunk[$k].'_FF_'.$AllYear[$y]];
-										//echo '<br>';
-										
+										$hou_data[$SubChunk[$k].'_FF_'.$AllYear[$y]] = ensure_numeric($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']) * ensure_numeric($popmultiple) *
+										ensure_numeric($beData[$SubChunk[$k].'_g_'.$AllYear[$y]])/100 * ensure_numeric($beData[$SubChunk[$k].'_f_'.$AllYear[$y]]) * (1-ensure_numeric($beData[$TypeChunk[$j].'_e_'.$AllYear[$y]])/100) * ensure_numeric($unittype)/1000;
 									}
 								}
 							}
@@ -1703,17 +1700,33 @@
 									$FN = 'P_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$YN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y];
+									$ED = $TypeChunk[$j].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$YD = $TypeChunk[$j].'_'.$AllYear[$y];
+									$SD = $houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$HD = $houendtypes['id'].'_'.$AllYear[$y];
+									$FD = $houtypes['id'].'_'.$AllYear[$y];
+									$fhouIN = ensure_numeric(NAN($fhou_data[$IN]));
+									$fhou_data[$ED] = ensure_numeric(NAN($fhou_data[$ED])) + $fhouIN;
+									$fhou_data[$YN] = ensure_numeric(NAN($fhou_data[$YN])) + $fhouIN;
+									$fhou_data[$SD] = ensure_numeric(NAN($fhou_data[$SD])) + $fhouIN;
+									$fhou_data[$YD] = ensure_numeric(NAN($fhou_data[$YD])) + $fhouIN;
+									$fhou_data[$FD] = ensure_numeric(NAN($fhou_data[$FD])) + $fhouIN;
+									$fhou_data[$HD] = ensure_numeric(NAN($fhou_data[$HD])) + $fhouIN;
+									$fhou_data['T_'.$AllYear[$y]] = ensure_numeric(NAN($fhou_data['T_'.$AllYear[$y]])) + $fhouIN;
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='TF' or $houtypes['id']=='MB')){
 										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN]) / ensure_numeric($beData[$SN]);
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='EL'){
 										$HN = 'PH_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 * (1-ensure_numeric($beData[$HN])/100*(1-ensure_numeric(1/ensure_numeric($beData[$SN]))));
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='DH'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100;
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='SO'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]*$beData[$SN]/100/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN]) * ensure_numeric($beData[$SN])/100/100;
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='FF'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*($beData[$FN]+$beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]*(1-$beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]/100))/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(ensure_numeric($beData[$FN]) + ensure_numeric($beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(1-ensure_numeric($beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]])/100)) / ensure_numeric($beData[$SN]);
 									
 									}
 								}	
@@ -1724,21 +1737,36 @@
 									$FN = 'P_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$YN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y];
+									$ED = $TypeChunk[$j].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$YD = $TypeChunk[$j].'_'.$AllYear[$y];
+									$SD = $houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
+									$HD = $houendtypes['id'].'_'.$AllYear[$y];
+									$FD = $houtypes['id'].'_'.$AllYear[$y];
+									$fhouIN = ensure_numeric(NAN($fhou_data[$IN]));
+									$fhou_data[$ED] = ensure_numeric(NAN($fhou_data[$ED])) + $fhouIN;
+									$fhou_data[$YN] = ensure_numeric(NAN($fhou_data[$YN])) + $fhouIN;
+									$fhou_data[$SD] = ensure_numeric(NAN($fhou_data[$SD])) + $fhouIN;
+									$fhou_data[$YD] = ensure_numeric(NAN($fhou_data[$YD])) + $fhouIN;
+									$fhou_data[$FD] = ensure_numeric(NAN($fhou_data[$FD])) + $fhouIN;
+									$fhou_data[$HD] = ensure_numeric(NAN($fhou_data[$HD])) + $fhouIN;
+									$fhou_data['T_'.$AllYear[$y]] = ensure_numeric(NAN($fhou_data['T_'.$AllYear[$y]])) + $fhouIN;
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='TF' or $houtypes['id']=='MB')){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN]) / ensure_numeric($beData[$SN]);
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='EL'){
 										$HN = 'PH_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
-										$fhou_data[$IN] = NAN($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * NAN($beData[$FN]/100)*(1-NAN($beData[$HN])/100*(1-NAN(1/$beData[$SN])));
-									
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 * (1-ensure_numeric($beData[$HN])/100*(1-ensure_numeric(1/ensure_numeric($beData[$SN]))));
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='DH'){
 										
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100;
 									
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='SO'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100*$beData[$SN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 * ensure_numeric($beData[$SN])/100;
 									
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='FF'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*($beData[$FN]+$beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]*(1-$beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]/100))/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(ensure_numeric($beData[$FN]) + ensure_numeric($beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(1-ensure_numeric($beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]])/100)) / ensure_numeric($beData[$SN]);
 									}
 								}	
 							}
@@ -1750,20 +1778,22 @@
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='TF' or $houtypes['id']=='MB')){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN]) / ensure_numeric($beData[$SN]);
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='EL'){
 										$HN = 'PH_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100;
 									
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='DH'){
 										
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100;
 									
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='SO'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100*$beData[$SN]/100;
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 * ensure_numeric($beData[$SN])/100;
 									
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='FF'){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*($beData[$FN]+$beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]*(1-$beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]/100))/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(ensure_numeric($beData[$FN]) + ensure_numeric($beData['P_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]]) * 
+											(1-ensure_numeric($beData['E_'.$TypeChunk[$j].'_SO_'.$houendtypes['id'].'_'.$AllYear[$y]])/100)) / ensure_numeric($beData[$SN]);
 									}
 								}	
 							}
@@ -1774,7 +1804,7 @@
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='EL' or $houtypes['id']=='FF' )){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100/$beData[$SN];
 									}
 								}	
 							}
