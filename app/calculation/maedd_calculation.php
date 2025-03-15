@@ -1597,11 +1597,11 @@
 									$beData[$SubChunk[$k].'_g_'.$AllYear[$y]]/100 * $beData[$SubChunk[$k].'_d_'.$AllYear[$y]]*  $beData[$TypeChunk[$j].'_e_'.$AllYear[$y]]/100*$unittype/1000;	
 									//=Demography!D10*Urban!D4/100*Urban!D101/100*Urban!D115*F3/1000
 									if($bjData['LH_'.$TypeChunk[$j]]=='Y'){
-										$hou_data[$SubChunk[$k].'_LH_'.$AllYear[$y]] = ($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']*$popmultiple)*
-										$beData[$SubChunk[$k].'_g_'.$AllYear[$y]]/100 * $beData[$SubChunk[$k].'_LH_d_'.$AllYear[$y]] * $beData[$TypeChunk[$j].'_e_'.$AllYear[$y]]/100*$unittype/1000;	
+										$hou_data[$SubChunk[$k].'_LH_'.$AllYear[$y]] = ensure_numeric($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']) * ensure_numeric($popmultiple) *
+										ensure_numeric($beData[$SubChunk[$k].'_g_'.$AllYear[$y]])/100 * ensure_numeric($beData[$SubChunk[$k].'_LH_d_'.$AllYear[$y]]) * ensure_numeric($beData[$TypeChunk[$j].'_e_'.$AllYear[$y]])/100 * ensure_numeric($unittype)/1000;	
 									//=Demography!D10*Urban!D4/100*(1-Urban!D101/100)*Urban!D118*F3/1000	
-										$hou_data[$SubChunk[$k].'_FF_'.$AllYear[$y]] = ($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH'] *$popmultiple)* 
-										$beData[$SubChunk[$k].'_g_'.$AllYear[$y]]/100 * (1-$beData[$TypeChunk[$j].'_e_'.$AllYear[$y]]/100) * $beData[$SubChunk[$k].'_LH_f_'.$AllYear[$y]]*$unittype/1000;
+										$hou_data[$SubChunk[$k].'_FF_'.$AllYear[$y]] = ensure_numeric($acData[$TypeChunk[$j].'_'.$AllYear[$y].'_NH']) * ensure_numeric($popmultiple) * 
+										ensure_numeric($beData[$SubChunk[$k].'_g_'.$AllYear[$y]])/100 * (1-ensure_numeric($beData[$TypeChunk[$j].'_e_'.$AllYear[$y]])/100) * ensure_numeric($beData[$SubChunk[$k].'_LH_f_'.$AllYear[$y]]) * ensure_numeric($unittype)/1000;
 										
 									}else{
 									//=Demography!D10*Urban!D4/100*(1-Urban!D101/100)*Urban!D118*F3/1000	
@@ -1704,10 +1704,10 @@
 									$SN = 'E_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
 									$IN = $TypeChunk[$j].'_'.$houendtypes['id'].'_'.$houtypes['id'].'_'.$AllYear[$y];
 									if($houtypes[$houendtypes['id']]=='Y' and ($houtypes['id']=='TF' or $houtypes['id']=='MB')){
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/$beData[$SN];
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN]) / ensure_numeric($beData[$SN]);
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='EL'){
 										$HN = 'PH_'.$TypeChunk[$j].'_'.$houtypes['id'].'_'.$houendtypes['id'].'_'.$AllYear[$y];
-										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]] * $beData[$FN]/100*(1-NAN($beData[$HN])/100*(1-NAN(1/$beData[$SN])));
+										$fhou_data[$IN] = ensure_numeric($hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]) * ensure_numeric($beData[$FN])/100 * (1-ensure_numeric($beData[$HN])/100*(1-ensure_numeric(1/ensure_numeric($beData[$SN]))));
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='DH'){
 										$fhou_data[$IN] = $hou_data[$TypeChunk[$j].'_'.$houendtypes['id'].'_'.$AllYear[$y]]*$beData[$FN]/100;
 									}elseif($houtypes[$houendtypes['id']]=='Y' and $houtypes['id']=='SO'){
