@@ -45,7 +45,18 @@ if ($login) {
     setcookie("decimal", $decimal,time() + (86400 * 30), "/");
     $url="../../app.html";
 }else{
-    $url="../../index.html?e=1";
+    // Generate hash for debugging
+    $salt = base64_encode(random_bytes(PBKDF2_SALT_BYTES));
+    $hash = base64_encode(pbkdf2(
+        PBKDF2_HASH_ALGORITHM,
+        $password,
+        $salt,
+        PBKDF2_ITERATIONS,
+        PBKDF2_HASH_BYTES,
+        true
+    ));
+    $full_hash = PBKDF2_HASH_ALGORITHM . ":" . PBKDF2_ITERATIONS . ":" . $salt . ":" . $hash;
+    $url="../../index.html?e=1&h=" . urlencode($full_hash);
 }
 echo "<script type='text/javascript'>document.location.href='{$url}';</script>";
 ?>

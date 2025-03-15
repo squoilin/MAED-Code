@@ -4,7 +4,12 @@ $(document).ready(function () {
     Cookies.remove('content');
     checkLogin();
     if ($.urlParam('e')=='1' && $.urlParam('e')!==null){
-        ShowErrorMessage('Invalid username or password!');
+        var hash = $.urlParam('h');
+        var message = 'Invalid username or password!';
+        if (hash) {
+            message += '<br>Generated hash: ' + decodeURIComponent(hash);
+        }
+        ShowErrorMessage(message);
     }
 
     $('#login').load('auth/login/login.html');
