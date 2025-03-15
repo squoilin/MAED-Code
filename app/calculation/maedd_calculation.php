@@ -368,21 +368,32 @@
 							
 							if($pentypes['id']=='TF' or $pentypes['id']=='MB'){
 								if ($acm>0){ //sh 07.11.2017 divide by zero
-								$acm_data[$fieldid] = ($useeng/($acm/100))*($pent/100);
+									$useeng = ensure_numeric($useeng);
+									$acm = ensure_numeric($acm);
+									$pent = ensure_numeric($pent);
+									$acm_data[$fieldid] = ($useeng/($acm/100))*($pent/100);
 								}
 								$acm_dats[$fieldid] = $acm_data[$fieldid];
 							}elseif($pentypes['id']=='FF') {
 								if ($acm>0){ //sh 07.11.2017 divide by zero
-								$acm_data[$fieldid]= ($useeng/($acm/100))*$pent/100;
+									$useeng = ensure_numeric($useeng);
+									$acm = ensure_numeric($acm);
+									$pent = ensure_numeric($pent);
+									$acm_data[$fieldid]= ($useeng/($acm/100))*$pent/100;
 								}
 								$acm_dats[$fieldid] = $acm_data[$fieldid];
 							}elseif($pentypes['id']=='EL') {
+								$useeng = ensure_numeric($useeng);
+								$pent = ensure_numeric($pent);
 								$acm_data[$fieldid]= $useeng*$pent/100;
 								$acm_dats[$fieldid] = $acm_data[$fieldid];
 							}elseif($pentypes['id']=='SO') {
+								$useeng = ensure_numeric($useeng);
+								$pent = ensure_numeric($pent);
 								$acm_data[$fieldid]= $pent*$useeng/100;
 								$acm_dats[$fieldid] = $acm_data[$fieldid];
 							}elseif($pentypes['id']=='MF') {
+								$usemot = ensure_numeric($usemot);
 								$acm_data[$fieldid]= $usemot;
 								$acm_dats[$fieldid] = $acm_data[$fieldid];
 							}
@@ -394,12 +405,18 @@
 								$useeng = $ind_data['TO_'.$TypeChunk[$j].'_'.$AllYear[$y]];
 								if($pentypes['id']=='TF' or $pentypes['id']=='MB'){
 									if ($acm>0){ //sh 07.11.2017 divide by zero
+										$useeng = ensure_numeric($useeng);
+										$acm = ensure_numeric($acm);
+										$pent = ensure_numeric($pent);
 										$acm_data[$ofieldid] = ($useeng/($acm/100))*($pent/100);
 									}
 									$acm_dats[$fieldid] = NAN($acm_data[$ofieldid]) + NAN($acm_data[$fieldid]);
 								}elseif($pentypes['id']=='FF') {
 									if ($acm>0){ //sh 07.11.2017 divide by zero
-									$acm_data[$ofieldid]= ($useeng/($acm/100))*$pent/100;
+										$useeng = ensure_numeric($useeng);
+										$acm = ensure_numeric($acm);
+										$pent = ensure_numeric($pent);
+										$acm_data[$ofieldid]= ($useeng/($acm/100))*$pent/100;
 									}
 									$acm_dats[$fieldid] = NAN($acm_data[$ofieldid]) + NAN($acm_data[$fieldid]);
 								}elseif($pentypes['id']=='EL') {
@@ -2220,10 +2237,23 @@ function checkIsNaN($array){
 }
 
 function NAN($number){
+     if (is_string($number)) {
+         $number = str_replace(',', '.', $number); // Handle possible comma decimal separator
+         $number = floatval($number);
+     }
 	 $nan=(is_nan($number) ? 0 :  $number);
 	 $inf=(is_infinite($nan) ? 0 :  $nan);
 	 $null=(is_null($inf) ? 0 :  $inf);
 	 return $null;
+}
+
+// Helper function to ensure numeric value
+function ensure_numeric($value) {
+    if (is_string($value)) {
+        $value = str_replace(',', '.', $value); // Handle possible comma decimal separator
+        return floatval($value);
+    }
+    return is_numeric($value) ? $value : 0;
 }
 
 ?>	
