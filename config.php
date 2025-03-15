@@ -1,7 +1,12 @@
 <?php
     error_reporting(~E_NOTICE);
     session_start();
-    $maedtype = $_COOKIE['maedtype'];
+    // Set default MAED type if cookie is not set
+    if (!isset($_COOKIE['maedtype'])) {
+        $maedtype = 'maedel'; // Default to maedel type
+    } else {
+        $maedtype = $_COOKIE['maedtype'];
+    }
     define('LOGIN',1);
     define('ROOT_FOLDER', dirname(__FILE__));
     define("BASE_PATH", ROOT_FOLDER . "/");
