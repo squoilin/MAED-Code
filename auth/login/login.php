@@ -43,9 +43,23 @@ for ($i=0; $i<count($users); $i++) {
         
         // Debug PBKDF2 parameters
         $params = explode(":", $users[$i]["password"]);
-        fwrite($log_file, "Hash parts: algorithm=" . $params[0] . 
-                         ", iterations=" . $params[1] . 
-                         ", salt=" . $params[2] . "\n");
+        fwrite($log_file, "Hash parts:\n");
+        fwrite($log_file, "  algorithm: " . $params[0] . "\n");
+        fwrite($log_file, "  iterations: " . $params[1] . "\n");
+        fwrite($log_file, "  salt (base64): " . $params[2] . "\n");
+        fwrite($log_file, "  stored hash (base64): " . $params[3] . "\n");
+        
+        // Generate hash with same parameters for comparison
+        $salt = base64_decode($params[2]);
+        $generated_hash = base64_encode(pbkdf2(
+            $params[0],
+            $password,
+            $salt,
+            (int)$params[1],
+            PBKDF2_HASH_BYTES,
+            true
+        ));
+        fwrite($log_file, "  generated hash (base64): " . $generated_hash . "\n");
         
         $login=validate_password($password, $users[$i]["password"]);
         fwrite($log_file, "Password validation result: " . ($login ? "success" : "failed") . "\n");
