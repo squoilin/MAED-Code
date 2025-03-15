@@ -51,15 +51,18 @@ for ($i=0; $i<count($users); $i++) {
         
         // Generate hash with same parameters for comparison
         $salt = base64_decode($params[2]);
-        $generated_hash = base64_encode(pbkdf2(
+        $stored_binary = base64_decode($params[3]);
+        $generated_binary = pbkdf2(
             $params[0],
             $password,
             $salt,
             (int)$params[1],
-            PBKDF2_HASH_BYTES,
+            strlen($stored_binary),
             true
-        ));
-        fwrite($log_file, "  generated hash (base64): " . $generated_hash . "\n");
+        );
+        
+        fwrite($log_file, "  stored binary (hex): " . bin2hex($stored_binary) . "\n");
+        fwrite($log_file, "  generated binary (hex): " . bin2hex($generated_binary) . "\n");
         
         $login=validate_password($password, $users[$i]["password"]);
         fwrite($log_file, "Password validation result: " . ($login ? "success" : "failed") . "\n");
