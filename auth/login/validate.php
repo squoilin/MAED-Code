@@ -6,12 +6,13 @@ function validate_password($password, $good_hash)
         return false;
     }
     $pbkdf2 = base64_decode($params[HASH_PBKDF2_INDEX]);
+    $salt = base64_decode($params[HASH_SALT_INDEX]);
     return slow_equals(
         $pbkdf2,
         pbkdf2(
             $params[HASH_ALGORITHM_INDEX],
             $password,
-            $params[HASH_SALT_INDEX],
+            $salt,
             (int)$params[HASH_ITERATION_INDEX],
             strlen($pbkdf2),
             true
