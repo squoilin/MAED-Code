@@ -11,3 +11,8 @@ This repository contains the code used to run the model.
 
 ## Contributing
 New ideas and bugs should be submissted to the repository issue tracker. Please do contribute by discussing and developing these ideas further.
+
+## Logging in
+For testing purposes, the following user/password can be used:
+Username: sylvain
+Password: Test@2024
